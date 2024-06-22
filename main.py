@@ -81,15 +81,33 @@ def check_prediction(result,face):
 
 # Title of the Web-page                     
 st.title('Facial Emotion Recognition')
+st.markdown('---')
 
 # Sidebar
 with st.sidebar:
-    option = st.radio("Select Image Capture Method:",['Use pre-loaded image','Use Web Camera','Upload Manually'],0)
+    st.image(r'uploads\front_image.jpg')
+    st.title("Facial Emotion Recognition")
+    option = st.radio("**Select Image Capture Method :control_knobs: :** ",['Pre-loaded image','Web Camera','Upload Manually'],0)
     st.markdown('---')
-    st.markdown('Made By: [Utkarsh Sen](https://www.linkedin.com/in/utk-sen/)')
+    st.markdown('**Made By:** [Utkarsh Sen](https://www.linkedin.com/in/utk-sen/)')
+
+with st.expander('**About Project** :question:'):
+    st.write('**What this project is about?  :face_with_raised_eyebrow:**')
+    st.info("""This app uses preloaded images, web camera, or manually uploaded images to capture your 
+            face, analyzes your expression with clever algorithms, and guesses your emotion - happy, 
+            sad, angry, surprised, and so on. It's like a mood detector for your face!""")
+    st.write("**How to use this app? :thinking_face:**")
+    st.warning("""To engage with the app, go to the sidebar and select a suitable method:
+                1. If method chosen is pre-loaded images, use one of the 5 images to run model;
+                2. If method chosen is web-camera, allow permission to use web camera and capture 
+               the image; 3. If method chosen is upload manually, upload one of your image from the device.
+               As a result, this would initiate the model process, display the model results as well 
+               as allowing users to see a detailed pie-chart view of the probability of different classes.""")
+    st.write('**Data Set Used:**')
+    st.markdown('- [Face expression recognition dataset](https://www.kaggle.com/datasets/jonathanoheix/face-expression-recognition-dataset)')
     
 # Preloaded image    
-if option == 'Use pre-loaded image':
+if option == 'Pre-loaded image':
     dir = r'data\trial'
     paths = os.listdir(dir)
     file = st.selectbox('Choose a file:',paths,index=None,placeholder='choose a file')
@@ -104,7 +122,7 @@ if option == 'Use pre-loaded image':
             st.error("Please Import a Valid File.")
 
 # Web Camera    
-if option == 'Use Web Camera':
+if option == 'Web Camera':
     img_file_buffer = st.camera_input("Take a picture")
     if img_file_buffer is not None:
         # To read image file buffer as a PIL Image:
