@@ -18,7 +18,7 @@ class preprocessing():
         # conversion to gray image 
         gray_img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
         # loading haar-cascade model
-        face_cascade = cv2.CascadeClassifier('models\haarcascade_frontalface_default.xml')
+        face_cascade = cv2.CascadeClassifier(r'models/haarcascade_frontalface_default.xml')
         # Object for cascade classifier
         faces = face_cascade.detectMultiScale(gray_img, 1.2, 5)
         for (x, y, w, h) in faces:

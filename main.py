@@ -8,6 +8,7 @@ from PIL import Image
 # Numerical Analysis
 import numpy as np
 # Loading saved models
+import tensorflow as tf
 from keras.models import load_model
 # Visualization
 import plotly.express as px
@@ -20,7 +21,7 @@ from uploads.face_recognition import preprocessing
 @st.cache_resource
 def model_use():
     '''returns: saved model'''
-    model = load_model(r'models\model_1.h5')
+    model = load_model(r'models/model_1.h5')
     return model
 
 @st.cache_data
@@ -30,8 +31,8 @@ def prediction(source):
     returns: probabilities of different classes'''
     img = Image.open(source)
     img = img.convert('RGB')
-    img.save(r'data\img.jpg')
-    image = preprocessing(r'data\img.jpg')
+    img.save(r'data/img.jpg')
+    image = preprocessing(r'data/img.jpg')
     face = image.cascade()
     image.reshape()
     output = image.standardize()
@@ -63,7 +64,7 @@ def check_prediction(result,face):
     face: face image'''
     with st.expander('Help Model Improve'):
         check = st.radio('Is prediction correct?',['Yes','No'],index=None)
-        dir = r'data\new_data'
+        dir = r'data/new_data'
         if check == 'Yes':
             result = result.lower()
             img_dir = os.path.join(dir,'correctly_classified',result)
@@ -85,7 +86,7 @@ st.markdown('---')
 
 # Sidebar
 with st.sidebar:
-    st.image(r'uploads\front_image.jpg')
+    st.image(r'uploads/front_image.jpg')
     st.title("Facial Emotion Recognition")
     option = st.radio("**Select Image Capture Method :control_knobs: :** ",['Pre-loaded image','Web Camera','Upload Manually'],0)
     st.markdown('---')
@@ -108,7 +109,7 @@ with st.expander('**About Project** :question:'):
     
 # Preloaded image    
 if option == 'Pre-loaded image':
-    dir = r'data\trial'
+    dir = r'data/trial'
     paths = os.listdir(dir)
     file = st.selectbox('Choose a file:',paths,index=None,placeholder='choose a file')
     if file:
