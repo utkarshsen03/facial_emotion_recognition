@@ -57,28 +57,42 @@ def results(prediction):
         st.plotly_chart(fig,use_container_width=True)
     return result
 
-def check_prediction(result,face):
+def check_prediction(result,uploaded_file):
     '''saves the image in folder for future training.
     inputs:
     result:label with highest probability
     face: face image'''
     with st.expander('Help Model Improve'):
         check = st.radio('Is prediction correct?',['Yes','No'],index=None)
-        dir = r'data/new_data'
         if check == 'Yes':
-            result = result.lower()
-            img_dir = os.path.join(dir,'correctly_classified',result)
-            unique_name = datetime.now().strftime("%Y%m%d_%H%M%S")
-            image_path = os.path.join(img_dir,unique_name)
-            cv2.imwrite(image_path+'.jpg',face)
-            st.write('Thank you for the input.')
+            dir = r'data/new_data/correctly_classified'
+            try:
+                result = result.lower()
+                img_dir = os.path.join(dir,result)
+                if not os.path.exists(img_dir):
+                    os.makedirs(img_dir)
+                unique_name = datetime.now().strftime("%Y%m%d_%H%M%S")
+                image_path = os.path.join(img_dir,unique_name)
+                with open(image_path,'wb') as f:
+                    f.write(uploaded_file.getbuffer())
+                #cv2.imwrite(image_path+'.jpg',face)
+                st.write('Thank you for the input.')
+            except Exception as e:
+                st.write(f'Save Error: {e}')
         if check == 'No':
-            img_dir = os.path.join(dir,'incorrectly_classified')
-            unique_name = datetime.now().strftime("%Y%m%d_%H%M%S")
-            image_path = os.path.join(img_dir,unique_name)
-            cv2.imwrite(image_path+'.jpg',face)
-            st.write('Thank you for the input.')
-                     
+            try:
+                dir = r'data/new_data/incorrectly_classified'
+                if not os.path.exists(dir):
+                    os.makedirs(dir)
+                img_dir = os.path.join(dir)
+                unique_name = datetime.now().strftime("%Y%m%d_%H%M%S")
+                image_path = os.path.join(img_dir,unique_name)
+                with open(image_path,'wb') as f:
+                    f.write(uploaded_file.getbuffer())
+                #cv2.imwrite(image_path+'.jpg',face)
+                st.write('Thank you for the input.')
+            except Exception as e:
+                st.write(f'Save Error:{e}')            
 
 # Title of the Web-page                     
 st.title('Facial Emotion Recognition')
@@ -130,9 +144,9 @@ if option == 'Web Camera':
         try:
             pred,face = prediction(img_file_buffer)
             result = results(pred)
-            check_prediction(result,face)
+            check_prediction(result,img_file_buffer)
         except:
-            st.error("Please Import a Valid File.")
+            st.error("File Upload Error")
 
 # User Images            
 if option == 'Upload Manually':
@@ -143,6 +157,6 @@ if option == 'Upload Manually':
             st.image(img)
             pred,face = prediction(uploaded_file)
             result = results(pred)
-            check_prediction(result,face)
+            check_prediction(result,uploaded_file)
         except:
-            st.error("Please Import a Valid File.")
+            st.error("File Upload Error")
